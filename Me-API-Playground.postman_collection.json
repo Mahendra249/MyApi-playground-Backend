@@ -1,0 +1,126 @@
+{
+  "info": {
+    "name": "Profile API",
+    "_postman_id": "b2f9d3fa-67b8-4c49-9f21-97fdf7b81e0e",
+    "description": "Collection for Profile API with CRUD, search, skills, and health check",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Health Check",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "http://localhost:5000/api/profiles/health",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "5000",
+          "path": ["api", "profiles", "health"]
+        }
+      }
+    },
+    {
+      "name": "Create Profile",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"John Doe\",\n  \"email\": \"john@example.com\",\n  \"education\": \"B.Tech CSE\",\n  \"skills\": [\"Node.js\", \"React\", \"MongoDB\"],\n  \"projects\": [{\"title\": \"Portfolio Website\", \"description\": \"Personal portfolio site\", \"links\": [\"http://example.com\"]}],\n  \"work\": [\"Software Engineer at XYZ\"],\n  \"links\": {\"github\": \"http://github.com/johndoe\", \"linkedin\": \"http://linkedin.com/in/johndoe\", \"portfolio\": \"http://johndoe.com\"}\n}"
+        },
+        "url": {
+          "raw": "http://localhost:5000/api/createProfile",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "5000",
+          "path": ["api", "profiles"]
+        }
+      }
+    },
+    {
+      "name": "Get Profile",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "http://localhost:5000/api/profiles",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "5000",
+          "path": ["api", "profiles"]
+        }
+      }
+    },
+    {
+      "name": "Update Profile",
+      "request": {
+        "method": "PUT",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"John Doe Updated\",\n  \"skills\": [\"Node.js\", \"Express.js\"]\n}"
+        },
+        "url": {
+          "raw": "http://localhost:5000/api/updateProfile",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "5000",
+          "path": ["api", "profiles"]
+        }
+      }
+    },
+    {
+      "name": "Delete Profile",
+      "request": {
+        "method": "DELETE",
+        "url": {
+          "raw": "http://localhost:5000/api/deleteProfile",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "5000",
+          "path": ["api", "profiles"]
+        }
+      }
+    },
+    {
+      "name": "Get Projects by Skill",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "http://localhost:5000/api/profiles/projects?skill=react",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "5000",
+          "path": ["api", "profiles", "projects"],
+          "query": [{ "key": "skill", "value": "react" }]
+        }
+      }
+    },
+    {
+      "name": "Get Top Skills",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "http://localhost:5000/api/profiles/skills/top",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "5000",
+          "path": ["api", "profiles", "skills", "top"]
+        }
+      }
+    },
+    {
+      "name": "Search Profile",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "http://localhost:5000/api/profiles/search?q=node",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "5000",
+          "path": ["api", "profiles", "search"],
+          "query": [{ "key": "q", "value": "node" }]
+        }
+      }
+    }
+  ]
+}

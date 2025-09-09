@@ -13,7 +13,7 @@ import {
 const router = express.Router();
 
 router.post("/createProfile", createProfile);
-router.put("updatedProfile", updateProfile);
+router.put("/updateProfile", updateProfile); 
 router.get("/profile", getProfile);
 router.delete("/deleteProfile", deleteProfile);
 router.get("/projects", getProjectsBySkill);

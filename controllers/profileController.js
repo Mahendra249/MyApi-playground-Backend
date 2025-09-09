@@ -113,29 +113,36 @@ export const getProjectsBySkill = async (req, res) => {
 export const getTopSkills = async (req, res) => {
   try {
     const profile = await Profile.findOne();
-    if (!profile)
+    if (!profile) {
       return res
         .status(404)
         .json({ success: false, message: "Profile not found" });
+    }
+
+    // Just return first 3 skills (or you can sort by proficiency if stored)
+    const topSkills = profile.skills.slice(0, 3);
 
     res.status(200).json({
       success: true,
       message: "Top skills fetched successfully.",
-      data: profile.skills.slice(0, 3),
+      data: topSkills,
     });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
   }
 };
 
+
 export const searchProfile = async (req, res) => {
   try {
     const { q } = req.query;
+
     const profile = await Profile.findOne();
-    if (!profile)
+    if (!profile) {
       return res
         .status(404)
         .json({ success: false, message: "Profile not found" });
+    }
 
     const results = {
       skills: profile.skills.filter((s) =>
@@ -160,6 +167,8 @@ export const searchProfile = async (req, res) => {
     res.status(500).json({ success: false, error: error.message });
   }
 };
+
+
 
 export const healthCheck = (req, res) => {
   res.json({

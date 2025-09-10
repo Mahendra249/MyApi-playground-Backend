@@ -88,21 +88,35 @@ export const deleteProfile = async (req, res) => {
 export const getProjectsBySkill = async (req, res) => {
   try {
     const { skill } = req.query;
+
+    if (!skill) {
+      return res.status(400).json({
+        success: false,
+        message: "Please provide a search keyword.",
+      });
+    }
+
     const profile = await Profile.findOne();
-    if (!profile)
+    if (!profile) {
       return res
         .status(404)
         .json({ success: false, message: "Profile not found" });
+    }
+
+    const normalizedSkill = skill.toLowerCase();
 
     const projects = profile.projects.filter(
       (p) =>
-        profile.skills.includes(skill) ||
-        p.description.toLowerCase().includes(skill.toLowerCase())
+        p.title?.toLowerCase().includes(normalizedSkill) ||
+        p.description?.toLowerCase().includes(normalizedSkill)
     );
 
-    res.json({
+    return res.status(200).json({
       success: true,
-      message: "Projects fetched successfully.",
+      message:
+        projects.length > 0
+          ? "Projects fetched successfully."
+          : `No projects found with keyword: ${skill}`,
       data: projects,
     });
   } catch (error) {
@@ -119,7 +133,6 @@ export const getTopSkills = async (req, res) => {
         .json({ success: false, message: "Profile not found" });
     }
 
-    // Just return first 3 skills (or you can sort by proficiency if stored)
     const topSkills = profile.skills.slice(0, 3);
 
     res.status(200).json({
@@ -132,7 +145,6 @@ export const getTopSkills = async (req, res) => {
   }
 };
 
-
 export const searchProfile = async (req, res) => {
   try {
     const { q } = req.query;
@@ -144,19 +156,41 @@ export const searchProfile = async (req, res) => {
         .json({ success: false, message: "Profile not found" });
     }
 
+    const lowerQ = q.toLowerCase();
+
     const results = {
-      skills: profile.skills.filter((s) =>
-        s.toLowerCase().includes(q.toLowerCase())
-      ),
+      name: profile.name.toLowerCase().includes(lowerQ) ? profile.name : null,
+      email: profile.email.toLowerCase().includes(lowerQ)
+        ? profile.email
+        : null,
+      education: profile.education.toLowerCase().includes(lowerQ)
+        ? profile.education
+        : null,
+      skills: profile.skills.filter((s) => s.toLowerCase().includes(lowerQ)),
       projects: profile.projects.filter(
         (p) =>
-          p.title.toLowerCase().includes(q.toLowerCase()) ||
-          p.description.toLowerCase().includes(q.toLowerCase())
+          p.title.toLowerCase().includes(lowerQ) ||
+          p.description.toLowerCase().includes(lowerQ)
       ),
-      work: profile.work.filter((w) =>
-        w.toLowerCase().includes(q.toLowerCase())
-      ),
+      work: profile.work.filter((w) => w.toLowerCase().includes(lowerQ)),
     };
+
+   
+    const hasResults =
+      results.name ||
+      results.email ||
+      results.education ||
+      results.skills.length > 0 ||
+      results.projects.length > 0 ||
+      results.work.length > 0;
+
+    if (!hasResults) {
+      return res.status(200).json({
+        success: true,
+        message: "No results found",
+        data: {},
+      });
+    }
 
     res.status(200).json({
       success: true,
@@ -167,7 +201,6 @@ export const searchProfile = async (req, res) => {
     res.status(500).json({ success: false, error: error.message });
   }
 };
-
 
 
 export const healthCheck = (req, res) => {
